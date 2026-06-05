@@ -68,3 +68,22 @@ document.addEventListener('touchmove', e => {
 
 document.onmouseup = () => { activeWin = null; };
 document.ontouchend = () => { activeWin = null; };
+document.onmousemove = e => {
+    if (!activeWin) return;
+
+    // حساب الموقع الجديد مع الحفاظ على الحدود
+    let newX = e.clientX - offset.x;
+    let newY = e.clientY - offset.y;
+
+    // منع الخروج من الجهة اليسرى والعليا
+    newX = Math.max(0, newX);
+    newY = Math.max(0, newY);
+
+    // منع الخروج من الجهة اليمنى والسفلية
+    // (نطرح عرض النافذة للحفاظ عليها داخل الشاشة)
+    newX = Math.min(window.innerWidth - activeWin.offsetWidth, newX);
+    newY = Math.min(window.innerHeight - activeWin.offsetHeight, newY);
+
+    activeWin.style.left = newX + 'px';
+    activeWin.style.top = newY + 'px';
+};
