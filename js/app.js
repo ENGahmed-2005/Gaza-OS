@@ -3,10 +3,10 @@
 ========================================================== */
 
 // 1. إدارة قائمة ابدأ والنقر الخارجي لإغلاقها
-// function toggleStartMenu() {
-//     const menu = document.getElementById('start-menu');
-//     if (menu) menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-// }
+function toggleStartMenu() {
+    const menu = document.getElementById('start-menu');
+    if (menu) menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
 
 document.addEventListener('mousedown', e => {
     const win = e.target.closest('.window');

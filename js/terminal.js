@@ -1,6 +1,3 @@
-/* ==========================================================
-   Gaza OS - js/terminal.js (محاكاة نظام التيرمينال)
-========================================================== */
 
 const terminalCommands = {
     help: () => `الأوامر المتاحة:\n  <span class="text-terminalTeal">ls</span>      - عرض الملفات والمجلدات\n  <span class="text-terminalTeal">about</span>   - حول Gaza OS\n  <span class="text-terminalTeal">clear</span>   - مسح الشاشة\n  <span class="text-terminalTeal">stats</span>   - إحصائيات النظام\n  <span class="text-terminalTeal">help</span>    - عرض هذه المساعدة`,

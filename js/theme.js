@@ -1,6 +1,3 @@
-/* ==========================================================
-   Gaza OS - إدارة الثيم ومتغيرات CSS (Theme Manager)
-========================================================== */
 
 function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
