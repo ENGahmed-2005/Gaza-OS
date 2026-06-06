@@ -27,70 +27,103 @@ function bringToFront(win) {
 }
 
 // السحب والتحريك للنوافذ عبر الفأرة واللمس
-let activeWin = null, offset = { x: 0, y: 0 };
+let activeWin = null;
+let offset = {
+    x: 0,
+    y: 0
+};
 
 function makeDraggable(win, handleSelector) {
+
     const handle = win.querySelector(handleSelector);
+
     if (!handle) return;
 
-    // ── Mouse ──
-    handle.addEventListener('mousedown', e => {
+    handle.onmousedown = e => {
+
         if (e.target.closest('.close-btn')) return;
+
         e.preventDefault();
+
         activeWin = win;
+
         const rect = win.getBoundingClientRect();
+
         offset.x = e.clientX - rect.left;
         offset.y = e.clientY - rect.top;
-        // نحوّل النافذة لـ fixed positioning لحظة السحب لأن offsetLeft قد يكون خاطئاً
-        _pinWindow(win, rect.left, rect.top);
-        bringToFront(win);
-    });
 
-    // ── Touch ──
-    handle.addEventListener('touchstart', e => {
+        bringToFront(win);
+    };
+
+    handle.ontouchstart = e => {
+
         if (e.target.closest('.close-btn')) return;
-        e.preventDefault(); // ← يمنع التمرير أثناء سحب الهيدر
-        activeWin = win;
+
+        e.preventDefault();
+
         const touch = e.touches[0];
+
+        activeWin = win;
+
         const rect = win.getBoundingClientRect();
+
         offset.x = touch.clientX - rect.left;
         offset.y = touch.clientY - rect.top;
-        _pinWindow(win, rect.left, rect.top);
+
         bringToFront(win);
-    }, { passive: false }); // passive:false ضروري مع preventDefault
+    };
 }
 
 document.onmousemove = e => {
-    if (!activeWin) return;
-    activeWin.style.left = (e.clientX - offset.x) + 'px';
-    activeWin.style.top = (e.clientY - offset.y) + 'px';
-};
 
-document.ontouchmove = e => {
-    if (!activeWin) return;
-    const touch = e.touches[0];
-    activeWin.style.left = (touch.clientX - offset.x) + 'px';
-    activeWin.style.top = (touch.clientY - offset.y) + 'px';
-};
-
-document.onmouseup = () => { activeWin = null; };
-document.ontouchend = () => { activeWin = null; };
-document.onmousemove = e => {
     if (!activeWin) return;
 
-    // حساب الموقع الجديد مع الحفاظ على الحدود
     let newX = e.clientX - offset.x;
     let newY = e.clientY - offset.y;
 
-    // منع الخروج من الجهة اليسرى والعليا
-    newX = Math.max(0, newX);
-    newY = Math.max(0, newY);
+    newX = Math.max(
+        0,
+        Math.min(
+            window.innerWidth - activeWin.offsetWidth,
+            newX
+        )
+    );
 
-    // منع الخروج من الجهة اليمنى والسفلية
-    // (نطرح عرض النافذة للحفاظ عليها داخل الشاشة)
-    newX = Math.min(window.innerWidth - activeWin.offsetWidth, newX);
-    newY = Math.min(window.innerHeight - activeWin.offsetHeight - 40.5, newY);
+    newY = Math.max(
+        0,
+        Math.min(
+            window.innerHeight - activeWin.offsetHeight,
+            newY
+        )
+    );
 
     activeWin.style.left = newX + 'px';
     activeWin.style.top = newY + 'px';
+};
+
+document.ontouchmove = e => {
+
+    if (!activeWin) return;
+
+    e.preventDefault();
+
+    const touch = e.touches[0];
+
+    let newX = touch.clientX - offset.x;
+    let newY = touch.clientY - offset.y;
+
+    activeWin.style.left = newX + "px";
+    activeWin.style.top = newY + "px";
+};
+
+document.onmouseup = () => {
+
+    activeWin = null;
+
+};
+
+document.ontouchend = () => {
+
+    activeWin = null;
+
 };

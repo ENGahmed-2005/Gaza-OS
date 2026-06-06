@@ -6,10 +6,10 @@ const terminalCommands = {
     stats: () => `إحصائيات البيئة:\n  - المبرمجون المسجلون: <span class="text-terminalVariable">15</span>\n  - الحالة: <span class="text-green-400">صامد وشغال</span>\n  - الطاقة: <span class="text-yellow-500">10% (بطارية مؤقتة)</span>\n  - الاتصال: <span class="text-red-500">متقطع / عبر الـ المخيلة</span>`
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+document.onDOMContentLoaded = function () {
     const termInput = document.getElementById('terminal-cmd');
     if (termInput) {
-        termInput.addEventListener('keydown', e => {
+        termInput.onkeydown = e => {
             if (e.key === 'Enter') {
                 const raw = termInput.value;
                 const cmd = raw.trim().toLowerCase();
@@ -32,6 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (winBody) winBody.scrollTop = winBody.scrollHeight;
                 }
             }
-        });
+        };
     }
-});
+};
