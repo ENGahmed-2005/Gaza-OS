@@ -1,51 +1,119 @@
-/* ==========================================================\r\n   Gaza OS - js/terminal.js\r\n========================================================== */
+/* ===========================================================
+   Gaza OS - terminal.js (نسخة مبسطة وواضحة)
+=========================================================== */
 
-const terminalCommands = {
-    help: () => `<span dir="ltr" style="display:block">الأوامر المتاحة:\r\n  <span class="text-terminalTeal">help</span>    - عرض هذه المساعدة\r\n  <span class="text-terminalTeal">ls</span>      - عرض الملفات والمجلدات\r\n  <span class="text-terminalTeal">about</span>   - حول Gaza OS\r\n  <span class="text-terminalTeal">clear</span>   - مسح الشاشة\r\n  <span class="text-terminalTeal">stats</span>   - إحصائيات النظام</span>`,
+const COMMANDS = {
+    help: {
+        exec: () => `╔════════════════════════════════════════╗
+║     الأوامر المتاحة في Gaza OS        ║
+╠════════════════════════════════════════╣
+║  help     - عرض هذه المساعدة          ║
+║  ls       - عرض الملفات والمجلدات     ║
+║  about    - معلومات عن النظام         ║
+║  stats    - إحصائيات النظام           ║
+║  clear    - مسح الشاشة                ║
+╚════════════════════════════════════════╝`,
+        desc: "عرض الأوامر المتاحة"
+    },
 
-    ls: () => `<span dir="ltr" style="display:block"><span class="text-terminalKeyword">drwxr-xr-x</span>  coders/       <span class="text-terminalComment">// مجلد المبرمجين</span>\r\n<span class="text-terminalKeyword">drwxr-xr-x</span>  projects/     <span class="text-terminalComment">// مشاريع المبرمجين</span>\r\n<span class="text-terminalVariable">-rw-r--r--</span>  manifesto.txt\r\n<span class="text-terminalVariable">-rw-r--r--</span>  readme.md\r\n<span class="text-terminalVariable">-rw-r--r--</span>  kernel.sys\r\n<span class="text-terminalString">-rwxr-xr-x</span>  start.sh      <span class="text-terminalComment">// سكريبت التشغيل</span></span>`,
-    
+    ls: {
+        exec: () => `📁 مجلد المبرمجين     (15 مبرمج)
+📁 مجلد المشاريع      (40+ مشروع)
+📄 ملف البيان.txt
+📄 سجل الصمود.log
+🔗 الأمل -> /غزة/المستقبل`,
+        desc: "عرض الملفات والمجلدات"
+    },
 
-    about: () => `<span class="text-terminalKeyword">Gaza OS [Version 1.0.0]</span>\nنظام محاكاة مبني بأيدي مبرمجي غزة.`,
+    about: {
+        exec: () => `┌─────────────────────────────────────┐
+│       Gaza OS الإصدار 1.0.0          │
+├─────────────────────────────────────┤
+│ نظام محاكاة تفاعلي                   │
+│ من إنتاج مبرمجي غزة                  │
+│ جامعة الأزهر - PCIT                  │
+│ #غزة_تُبرمَج                         │
+└─────────────────────────────────────┘`,
+        desc: "حول النظام"
+    },
 
-    stats: () => `إحصائيات البيئة:\n - الحالة: <span class="text-green-400">صامد وشغال</span>`
+    stats: {
+        exec: () => `📊 حالة النظام: صامد ويعمل 🇵🇸
+👨‍💻 عدد المبرمجين: 15
+📁 عدد المشاريع: 40+
+💪 مستوى الصمود: لا نهائي`,
+        desc: "إحصائيات النظام"
+    }
 };
 
-// وظيفة للحماية من الرموز الخطرة
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+const Terminal = {
+    outputEl: document.getElementById('terminal-output'),
+    inputEl: document.getElementById('terminal-cmd'),
 
-document.addEventListener("DOMContentLoaded", () => {
-    const termInput = document.getElementById('terminal-cmd');
-    if (!termInput) return;
+    escapeHtml(text) {
+        const p = document.createElement('p');
+        p.textContent = text;
+        return p.innerHTML;
+    },
 
-    termInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            const raw = termInput.value;
-            const cmd = raw.trim().toLowerCase();
-            termInput.value = '';
-            if (!cmd) return;
+    print(html, className = "") {
+        const div = document.createElement('div');
+        div.className = `mb-2 font-mono text-sm ${className}`;
+        div.style.whiteSpace = 'pre-line';
+        div.innerHTML = html;
+        this.outputEl.appendChild(div);
+        this.scrollToBottom();
+    },
 
-            const output = document.getElementById('terminal-output');
-            if (!output) return;
+    scrollToBottom() {
+        const container = this.outputEl?.parentElement;
+        if (container) container.scrollTop = container.scrollHeight;
+    },
 
-            // عرض الأمر المكتوب
-            output.innerHTML += `<div dir="ltr"><span class="text-terminalTeal">user@gaza_os</span><span class="text-gray-500">:</span><span class="text-terminalVariable">~$</span> <span class="text-gray-200">${escapeHtml(raw)}</span></div>`;
+    execute(rawCmd) {
+        const cmd = rawCmd.trim().toLowerCase();
 
-            if (cmd === 'clear') {
-                output.innerHTML = '';
-            } else if (terminalCommands[cmd]) {
-                output.innerHTML += `<div class="mb-2 whitespace-pre-line">${terminalCommands[cmd]()}</div>`;
-            } else {
-                output.innerHTML += `<div class="mb-2 text-red-400" dir="ltr">command not found: <span class="text-white">'${escapeHtml(raw)}'</span> — اكتب <span class="text-terminalTeal underline cursor-pointer" onclick="document.getElementById('terminal-cmd').value='help';document.getElementById('terminal-cmd').focus()">help</span></div>`;
-            }
+        // عرض الأمر المدخل
+        this.print(`<span class="text-terminalTeal">gaza@os</span>:<span class="text-terminalVariable">~$</span> ${this.escapeHtml(rawCmd)}`);
 
-            // تمرير الشاشة للأسفل تلقائياً
-            const winBody = termInput.closest('.overflow-y-auto');
-            if (winBody) winBody.scrollTop = winBody.scrollHeight;
+        // تنفيذ الأمر
+        if (cmd === 'clear') {
+            this.outputEl.innerHTML = '';
         }
-    });
+        else if (cmd === 'help') {
+            this.print(COMMANDS.help.exec());
+        }
+        else if (cmd === 'ls') {
+            this.print(COMMANDS.ls.exec());
+        }
+        else if (cmd === 'about') {
+            this.print(COMMANDS.about.exec());
+        }
+        else if (cmd === 'stats') {
+            this.print(COMMANDS.stats.exec());
+        }
+        else if (cmd !== '') {
+            this.print(`❌ أمر غير معروف: "${this.escapeHtml(cmd)}"
+💡 اكتب 'help' لعرض الأوامر المتاحة`, "text-red-400");
+        }
+    }
+};
+
+// تشغيل التيرمينال
+document.addEventListener("DOMContentLoaded", () => {
+    if (Terminal.inputEl) {
+        Terminal.inputEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                Terminal.execute(Terminal.inputEl.value);
+                Terminal.inputEl.value = '';
+            }
+        });
+
+        // رسالة ترحيب
+        Terminal.print(`╔══════════════════════════════════════╗
+║   🌟 مرحباً في Gaza OS Terminal 🌟   ║
+║                                      ║
+║   اكتب 'help' لبدء الاستخدام        ║
+╚══════════════════════════════════════╝`);
+    }
 });
