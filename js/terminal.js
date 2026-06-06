@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         output.innerHTML += `<div class="mb-2 text-red-400">الأمر غير معروف: '${raw}'. اكتب <span class="text-white underline cursor-pointer" onclick="document.getElementById('terminal-cmd').value='help'">help</span> للمساعدة.</div>`;
                     }
 
-                    // النزول التلقائي لأسفل الـ Terminal
                     const winBody = termInput.closest('.overflow-y-auto');
                     if (winBody) winBody.scrollTop = winBody.scrollHeight;
                 }

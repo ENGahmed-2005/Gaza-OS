@@ -1,6 +1,3 @@
-/* ==========================================================
-   Gaza OS - js/windowManager.js (إدارة وحركة النوافذ)
-========================================================== */
 
 function openWindow(id) {
     const win = document.getElementById(id);
@@ -61,6 +58,7 @@ document.onmousemove = e => {
 
 document.addEventListener('touchmove', e => {
     if (!activeWin) return;
+    e.preventDefault();
     const touch = e.touches[0];
     activeWin.style.left = (touch.clientX - offset.x) + 'px';
     activeWin.style.top = (touch.clientY - offset.y) + 'px';
