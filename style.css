@@ -1,45 +1,103 @@
-.container {
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+/* ======== القيم الافتراضية للمتغيرات (Dark Mode افتراضي) ======== */
+:root {
+    --win-bg: #0f0f1a;
+    --win-text: #ffffff;
+    --win-header-bg: #1a1a2e;
+    --win-border: #1f2937;
+    --win-body-bg: #0f0f1a;
+    --win-item-bg: #1a1a2e;
+    --win-item-border: #1f2937;
+    --win-item-hover-border: #00a8ff;
+    --win-input-bg: #1a1a2e;
+    --win-input-border: #374151;
+    --start-menu-bg: #0f0f1a;
+    --start-menu-text: #ffffff;
+    --start-menu-border: #1f2937;
+    --taskbar-bg: rgba(15, 15, 26, 0.9);
+    --taskbar-border: #1f2937;
+    --taskbar-item-bg: #1a1a2e;
+    --taskbar-item-border: #374151;
 }
+
+/* ======== Light Mode عبر data-theme ======== */
+:root[data-theme="light"] {
+    --win-bg: #ffffff;
+    --win-text: #111827;
+    --win-header-bg: #f3f4f6;
+    --win-border: #e5e7eb;
+    --win-body-bg: #f9fafb;
+    --win-item-bg: #f3f4f6;
+    --win-item-border: #e5e7eb;
+    --win-item-hover-border: #00a8ff;
+    --win-input-bg: #ffffff;
+    --win-input-border: #d1d5db;
+    --start-menu-bg: #ffffff;
+    --start-menu-text: #111827;
+    --start-menu-border: #e5e7eb;
+    --taskbar-bg: rgba(255, 255, 255, 0.9);
+    --taskbar-border: #e5e7eb;
+    --taskbar-item-bg: #f3f4f6;
+    --taskbar-item-border: #d1d5db;
+}
+
+/* ======== النوافذ ======== */
 .window {
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-
-    background: rgba(18, 18, 28, 0.65);
-
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, .35),
-        inset 0 1px 0 rgba(255, 255, 255, .08);
-
-    transition: all .3s ease;
+    background: var(--win-bg) !important;
+    color: var(--win-text) !important;
+    border: 1px solid var(--win-border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .08);
+    transition: background 0.3s ease, color 0.3s ease;
 }
+
+/* ======== تأكيد تطبيق اللون على كل النصوص داخل النوافذ ======== */
+.window,
+.window p,
+.window span,
+.window div,
+.window h1,
+.window h2,
+.window h3,
+.window label,
+.window strong {
+    color: var(--win-text);
+}
+
+/* استثناءات: العناصر التي لها ألوان خاصة */
+.window .text-gray-400,
+.window .text-gray-500,
+.window .text-osBlue,
+.window .text-red-400,
+.window .text-green-400,
+.window .text-yellow-400,
+.window .text-yellow-500,
+.window .text-emerald-400,
+.window .text-amber-500,
+.window .text-blue-400 {
+    color: inherit;
+}
+
+/* ======== body ======== */
 body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
+
 body::before {
     content: "";
     position: fixed;
     inset: 0;
-
-    background:
-        linear-gradient(rgba(0, 0, 0, .35),
-            rgba(0, 0, 0, .55));
-
+    background: linear-gradient(rgba(0, 0, 0, .35), rgba(0, 0, 0, .55));
     pointer-events: none;
-}.dock-icon {
+}
+
+/* ======== أيقونات الـ dock ======== */
+.dock-icon {
     transition: all .25s ease;
 }
 
 .dock-icon:hover {
-    transform:
-        translateY(-8px) scale(1.15);
+    transform: translateY(-8px) scale(1.15);
 }
