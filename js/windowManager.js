@@ -56,13 +56,12 @@ document.onmousemove = e => {
     activeWin.style.top = (e.clientY - offset.y) + 'px';
 };
 
-document.addEventListener('touchmove', e => {
+document.ontouchmove = e => {
     if (!activeWin) return;
-    e.preventDefault();
     const touch = e.touches[0];
     activeWin.style.left = (touch.clientX - offset.x) + 'px';
     activeWin.style.top = (touch.clientY - offset.y) + 'px';
-}, { passive: false });
+};
 
 document.onmouseup = () => { activeWin = null; };
 document.ontouchend = () => { activeWin = null; };
@@ -80,7 +79,7 @@ document.onmousemove = e => {
     // منع الخروج من الجهة اليمنى والسفلية
     // (نطرح عرض النافذة للحفاظ عليها داخل الشاشة)
     newX = Math.min(window.innerWidth - activeWin.offsetWidth, newX);
-    newY = Math.min(window.innerHeight - activeWin.offsetHeight, newY);
+    newY = Math.min(window.innerHeight - activeWin.offsetHeight - 40.5, newY);
 
     activeWin.style.left = newX + 'px';
     activeWin.style.top = newY + 'px';
