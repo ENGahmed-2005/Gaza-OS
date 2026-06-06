@@ -9,6 +9,7 @@ function openWindow(id) {
         win.style.left = (80 + open.length * 22) + 'px';
         win.style.top = (50 + open.length * 22) + 'px';
     } else {
+        // على الموبايل: النافذة تملأ العرض وتبدأ من الأعلى
         win.style.left = '';
         win.style.top = '';
     }
@@ -32,22 +33,31 @@ function makeDraggable(win, handleSelector) {
     const handle = win.querySelector(handleSelector);
     if (!handle) return;
 
-    handle.onmousedown = e => {
-        if (e.target.classList.contains('close-btn') || e.target.closest('.close-btn')) return;
+    // ── Mouse ──
+    handle.addEventListener('mousedown', e => {
+        if (e.target.closest('.close-btn')) return;
+        e.preventDefault();
         activeWin = win;
-        offset.x = e.clientX - win.offsetLeft;
-        offset.y = e.clientY - win.offsetTop;
+        const rect = win.getBoundingClientRect();
+        offset.x = e.clientX - rect.left;
+        offset.y = e.clientY - rect.top;
+        // نحوّل النافذة لـ fixed positioning لحظة السحب لأن offsetLeft قد يكون خاطئاً
+        _pinWindow(win, rect.left, rect.top);
         bringToFront(win);
-    };
+    });
 
-    handle.ontouchstart = e => {
-        if (e.target.classList.contains('close-btn') || e.target.closest('.close-btn')) return;
+    // ── Touch ──
+    handle.addEventListener('touchstart', e => {
+        if (e.target.closest('.close-btn')) return;
+        e.preventDefault(); // ← يمنع التمرير أثناء سحب الهيدر
         activeWin = win;
         const touch = e.touches[0];
-        offset.x = touch.clientX - win.offsetLeft;
-        offset.y = touch.clientY - win.offsetTop;
+        const rect = win.getBoundingClientRect();
+        offset.x = touch.clientX - rect.left;
+        offset.y = touch.clientY - rect.top;
+        _pinWindow(win, rect.left, rect.top);
         bringToFront(win);
-    };
+    }, { passive: false }); // passive:false ضروري مع preventDefault
 }
 
 document.onmousemove = e => {
